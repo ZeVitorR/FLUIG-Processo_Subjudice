@@ -1,0 +1,318 @@
+<html>
+<head>
+	<link type="text/css" rel="stylesheet" href="/style-guide/css/fluig-style-guide.min.css"/>
+	<link rel="stylesheet" href="style.css">
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+	<script type="text/javascript" src="/portal/resources/js/jquery/jquery.js"></script> <!--Faz ligação com o JQuery-->
+	<script type="text/javascript" src="/portal/resources/js/jquery/jquery-ui.min.js"></script><!--Faz ligação com o JQuery-->
+	<script type="text/javascript" src="/portal/resources/js/mustache/mustache-min.js"></script><!--Faz ligação com o JQuery-->
+	<script type="text/javascript" src="/style-guide/js/fluig-style-guide.min.js" charset="utf-8"></script><!--Faz ligação com o Fluig Style-->
+	<script type="text/javascript" src="api.js"></script>
+	<script type="text/javascript" src="apiFluig.js"></script>
+	<script type="text/javascript" src="FLUIGIP.js"></script><!--Faz ligação com o script do fluigy-->
+	<script type="text/javascript" src="processoSubjudice.js"></script><!--Faz ligação com o java script criado para o html-->
+	<script type="text/javascript" src="/webdesk/vcXMLRPC.js"></script>
+</head>
+<body>
+	<div class="fluig-style-guide"><!--Nescessário para manter o padrão do fluig-->
+		<form name="form" role="form"><!--Nescessário por ser um formulario-->
+			<div id="divCenter"><!--Div usada para deixar i conteuso do centro-->
+				<div class="panel panel-default"><!--Div usado para definir o painel do formulario-->
+					<div class="panel-heading"><!--Div para definir o cabeçalho do formulario-->
+						<div id="divCenter2">						
+							<img src="./logo.png" alt="logo da thcm" width="25%"/><!--Colocando o logo da THCM-->
+						</div>
+					</div>
+					<div class="panel-body"><!--Parte referente ao corpo do formulario ou seja onde vai as perguntas-->
+						<div class="panel panel-primary"><!--Div usado para definir o painel do formulario-->
+							<div class="panel-heading"><!--Div para definir o cabeçalho do formulario-->
+								<div>						
+									Jurídico (Dados do Cliente)
+								</div>
+							</div>
+							<div class="panel-body">
+								<div class="row form-group"><!--Definido a div da linha da pergunda-->
+									<div class="col-md-2"><!--Definindo o tamanho que vai ter o campo podendo ser de 1 a 18-->
+										<label class="control-label" for="codigoCliente">Código do Cliente</label>
+										<input type="text" id="codigoCliente" name="codigoCliente" class="form-control form-control-sm"
+											data-fluig-required="true" data-fluig-write="0" data-fluig-state-valid="0" maxlength="6"
+											oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');"
+											onblur="makeAPICall()"><!--Parte responsável por deixar o campo obrigatório-->
+									</div>
+									<div class="col-md-10">
+										<label class="control-label" for="nomeCliente">Nome do Cliente</label>
+										<div class="input-group">
+											
+											<input type="text" id="nomeCliente" name="nomeCliente" class="form-control form-control-sm"
+											data-fluig-required="true" data-fluig-write="0" data-fluig-state-valid="0" ><!--Parte responsável por deixar o campo obrigatório-->
+											<span id="busca" class="input-group-addon" onclick="makeAPICallCliente()"><i class="flaticon flaticon-search icon-sm" aria-hidden="true"></i></span>
+										</div>
+									</div>
+								</div>
+								<div class="row form-group">
+									<div class="col-md-2">
+										<label class="control-label" for="codigoFilial">Código da Filial</label>
+										<input type="text" data-fluig-write="0" data-fluig-state-valid="0" id="codigoFilial" name="codigoFilial" class="form-control form-control-sm"
+										oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');"><!--Parte responsável por deixar o campo obrigatório-->
+									</div>
+									<div class="col-md-10">
+										<label class="control-label" for="razaoSocial">Razão Social</label>
+										<input type="text" data-fluig-write="0" data-fluig-state-valid="0" id="razaoSocial" name="razaoSocial" class="form-control form-control-sm"
+										onKeyUP="this.value = this.value.toUpperCase();">
+									</div>
+								</div>
+								<div class="row form-group">
+									<div class="col-xs-7 col-md-6" id="divEmpreendimento">
+										<label class="control-label" for="empreendimento">Empreendimento</label>
+										<input type="text" id="empreendimento" data-fluig-write="0" data-fluig-state-valid="0" name="empreendimento" class="form-control form-control-sm"
+										data-fluig-required="true" onKeyUP="this.value = this.value.toUpperCase();" analytics="true" gooddataid="1">
+										<!-- <select id="empreendimento" name="empreendimento" class="form-control form-control-sm"
+										data-fluig-required="true" data-fluig-write="0" data-fluig-state-valid="0" onchange="dados()"
+										dataset="dsFormFilial" datasetkey="empreendimento" datasetvalue="empreendimento" analytics="true" gooddataid="1">
+										</select> -->
+									</div>
+									<div class="col-xs-7 col-md-3">
+										<label class="control-label" for="lote">Lote</label>
+										<input type="text" id="lote" name="lote" class="form-control form-control-sm"
+										data-fluig-required="true" data-fluig-write="0" data-fluig-state-valid="0" maxlength="3"
+										oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');">
+									</div>
+									<div class="col-xs-7 col-md-3">
+										<label class="control-label" for="quadra">Quadra</label>
+										<input type="text" id="quadra" name="quadra" class="form-control form-control-sm" maxlength="3"
+										data-fluig-required="true" data-fluig-write="0" data-fluig-state-valid="0">
+									</div>
+								</div>
+								<div class="row form-group">
+									<div class="col-md-5">
+										<label class="control-label" for="numProcesso">Numero do Processo</label>
+										<input type="text" id="numProcesso" name="numProcesso" class="form-control form-control-sm" maxlength="25"
+										data-fluig-write="0,5,6,7,8,9,10,11,12,13,14,16,17" data-fluig-state-valid="0,5,6,7,8,9,10,11,12,13,14,16,17">
+									</div>
+									<div class="col-md-5">
+										<label class="control-label" for="valorProcesso">Valor do Processo</label>
+										<div class="input-group">
+											<span class="input-group-addon">R$</span>
+											<input type="number" id="valorProcesso" name="valorProcesso" class="form-control form-control-sm" 
+											data-fluig-write="0" data-fluig-state-valid="0" >
+										</div>
+									</div>
+									<div class="col-md-2">
+										<label class="control-label" >Contrato registrado?</label><br>
+										<div class="custom-radio custom-radio-inline custom-radio-primary">
+											<input type="radio" name="radiotypes" value="Sim" id="contrato1"
+											data-fluig-write="0" data-fluig-state-valid="0">
+											<label for="contrato1">Sim</label>
+										</div>
+										<div class="custom-radio custom-radio-inline custom-radio-primary">
+											<input type="radio" name="radiotypes" value="Não" id="contrato2" checked>
+											<label for="contrato2" >Não</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-primary" id="show6"><!--Div usado para definir o painel do formulario-->
+							<div class="panel-heading"><!--Div para definir o cabeçalho do formulario-->
+								<div>						
+									Financeiro (Valores)
+								</div>
+							</div>
+							<div class="panel-body">
+								<div class="row form-group" id="show6">
+									<div class="col-md-6">
+										<label class="control-label" for="valorPago">Valor Pago</label>
+										<div class="input-group">
+											<span class="input-group-addon">R$</span>
+											<input type="number" id="valorPago" name="valorPago" class="form-control form-control-sm"
+											data-fluig-write="5" data-fluig-state-valid="5" >
+										</div>
+									</div>
+									<div class="col-md-6">
+										<label class="control-label" for="">Valor em Atraso</label>
+										<div class="input-group">
+											<span class="input-group-addon">R$</span>
+											<input type="number" id="valorAtraso" name="valorAtraso" class="form-control form-control-sm"
+											data-fluig-write="5" data-fluig-state-valid="5">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-primary" id="show8"><!--Div usado para definir o painel do formulario-->
+							<div class="panel-heading"><!--Div para definir o cabeçalho do formulario-->
+								<div>						
+									Avaliação Comercial
+								</div>
+							</div>
+							<div class="panel-body">
+								<div class="row form-group" id="show8">
+									<div class="col-md-6">
+										<label class="control-label" for="valorMercado">Valor de Mercado</label>
+										<div class="input-group">
+											<span class="input-group-addon">R$</span>
+											<input type="number" id="valorMercado" name="valorMercado" class="form-control form-control-sm"
+											data-fluig-required="true" data-fluig-write="6" data-fluig-state-valid="6">
+										</div>
+									</div>
+									<div class="col-md-6">
+										<label class="control-label" id="X">Existe construção?</label><br>
+										<div class="custom-radio custom-radio-inline custom-radio-primary"
+										data-fluig-required="true" data-fluig-write="6" data-fluig-state-valid="6">
+											<input type="radio" name="opcao" value="Sim" id="radio-1c" >
+											<label for="radio-1c">Sim</label>
+										</div>
+										<div class="custom-radio custom-radio-inline custom-radio-primary">
+											<input type="radio" name="opcao" value="Não" id="radio-2c"
+											data-fluig-required="true" data-fluig-write="8" data-fluig-state-valid="8" checked>
+											<label for="radio-2c" >Não</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-primary" id="show16"><!--Div usado para definir o painel do formulario-->
+							<div class="panel-heading"><!--Div para definir o cabeçalho do formulario-->
+								<div>						
+									Financeiro (Proposta)
+								</div>
+							</div>
+							<div class="panel-body">
+								<div class="row form-group" id="show16">
+									<div class="col-md-6">
+										<label class="control-label" for="valorMercado">Valor proposto</label>
+										<div class="input-group">
+											<span class="input-group-addon">R$</span>
+											<input type="number" id="valorProposta" name="valorProposta" class="form-control form-control-sm"
+											data-fluig-required="true" data-fluig-write="11" data-fluig-state-valid="11">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-primary" id="showJur"><!--Div usado para definir o painel do formulario-->
+							<div class="panel-heading"><!--Div para definir o cabeçalho do formulario-->
+								<div>						
+									Jurídico (Julgamento)
+								</div>
+							</div>
+							<div class="panel-body" id="showJur">
+								<div class="row form-group" id="showJur">
+									<div class="col-md-6" id="showJur1">
+										<label class="control-label">Sentença da 1° Instância:</label><br>
+										<div class="custom-radio custom-radio-inline custom-radio-primary">
+											<input type="radio" name="opcaoSetenca" value="Favorável" id="radio-SetFav">
+											<label for="radio-SetFav">Favorável</label>
+										</div>
+										<div class="custom-radio custom-radio-inline custom-radio-primary">
+											<input type="radio" name="opcaoSetenca" value="Desfavorável" id="radio-SetDes">
+											<label for="radio-SetDes" >Desfavorável</label>
+										</div>
+									</div>
+									<div class="col-md-6" id="showJur2">
+										<label class="control-label">Sentença da 2° Instância:</label><br>
+										<div class="custom-radio custom-radio-inline custom-radio-primary">
+											<input type="radio" name="opcaoSetenca2" value="Favorável" id="radio-SetFav2">
+											<label for="radio-SetFav2">Favorável</label>
+										</div>
+										<div class="custom-radio custom-radio-inline custom-radio-primary">
+											<input type="radio" name="opcaoSetenca2" value="Desfavorável" id="radio-SetDes2">
+											<label for="radio-SetDes2" >Desfavorável</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-primary" id="show39"><!--Div usado para definir o painel do formulario-->
+							<div class="panel-heading"><!--Div para definir o cabeçalho do formulario-->
+								<div>						
+									Comite
+								</div>
+							</div>
+							<div class="panel-body">
+								<div class="col-md-6">
+									<label class="control-label" for="situacao">Situação</label>
+									<select name="situacao" id="situacao" class="form-control"
+									data-fluig-write="39" data-fluig-state-valid="39">
+										<option value="Jurídico Externo/Providências">Jurídico Externo/Providências</option>
+										<option value="Lote para Estoque">Lote para Estoque</option>
+										<option value="Analise Juridica">Analise Juridica</option>
+										<option value="Revisão Interna/Providências">Revisão Interna/Providências</option>
+										<option value="Acordo Celebrado">Acordo Celebrado</option>
+										<option value="Propor Acordo">Propor Acordo</option>
+										<option value="Processo Finalizado">Processo Finalizado</option>
+									</select>
+								</div>
+								<div class="row form-group" id="show390">
+									<div class="col-md-4">
+										<label class="control-label" for="dataSubjudice">Subjudice desde:</label>
+										<input class="form-control" type="date" name="dataSubjudice" id="dataSubjudice" data-fluig-write="39,17,12,13,14,15,16,116,47,99,122,124,126,128,132,140,142" 
+										data-fluig-state-valid="39,17,12,13,14,15,16,116,47,99,122,124,126,128,132,140,142">
+									</div>
+								</div>
+								<div class="row form-group" id="show391">
+									<div class="col-md-10">
+										<label class="control-label" for="apontamentos">Apontamentos da PDL ADV</label>
+										<textarea class="form-control" rows="3" name="apontamentos" id="apontamentos" data-fluig-write="39,17,12,13,14,15,16,116,47,99,122,124,126,128,132,140,142" 
+										data-fluig-state-valid="39,17,12,13,14,15,16,116,47,99,122,124,126,128,132,140,142">
+										</textarea>
+									</div>
+								</div>
+								<div class="row form-group" id="show392">
+									<div class="col-md-4">
+										<label class="control-label" for="dataDecisao">Data da Decisão</label>
+										<input type="date" name="dataDecisao" id="dataDecisao" data-fluig-write="39,17,12,13,14,15,16,116,47,99,122,124,126,128,132,140,142" 
+										data-fluig-state-valid="39,17,12,13,14,15,16,116,47,99,122,124,126,128,132,140,142">
+									</div>
+								</div>
+								<div class="row form-group" id="show393">
+									<div class="col-md-10">
+										<label class="control-label" for="decisao">Decisão</label>
+										<textarea class="form-control" rows="3" name="decisao" id="decisao"data-fluig-write="39,17,12,13,14,15,16,116,47,99,122,124,126,128,132,140,142" 
+										data-fluig-state-valid="39,17,12,13,14,15,16,116,47,99,122,124,126,128,132,140,142"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<fieldset id="historico">
+						<div class="panel panel-primary">
+							<div class="panel-heading"><!--Div para definir o cabeçalho do formulario-->
+								Histórico do Processo
+							</div>
+							<div class="panel-body" id="hist">
+							</div>									
+						</div>
+					</fieldset>
+				</div>		
+			</div>
+		</form>
+	</div>
+	<div class="janela-dados" id="janela-modal1">
+		<div class="dados">
+			<h3 id="TitModal"></h1>
+			<select name="produtos" id="produtos" class="sel" >
+			</select>
+			<div>
+				<button class="ok" onclick="selecionaProduto()">OK</button>
+				<button class="cancelar" onclick="cancelar()">Cancelar</button>
+			</div>
+			
+		</div>				
+	</div>
+	<div class="janela-dados" id="janela-modal2">
+		<div class="dados">
+			<h3 id="TitModal2"></h1>
+			<select name="selcliente" id="selcliente" class="sel" >
+			</select>
+			<div>
+				<button class="ok" onclick="selecionaCliente()">OK</button>
+				<button class="cancelar" onclick="cancelar2()">Cancelar</button>
+			</div>
+			
+		</div>				
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+</body>
+</html>
